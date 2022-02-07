@@ -7,6 +7,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +33,39 @@ public class MainPageTest {
     @AfterEach
     public void tearDown() {
         driver.quit();
+    }
+
+    @Test
+    public void search() {
+        mainPage.searchButton.click();
+
+        WebElement searchField = driver.findElement(By.cssSelector("[data-test='search-input']"));
+        searchField.sendKeys("Selenium");
+
+        WebElement submitButton = driver.findElement(By.cssSelector("button[data-test='full-search-button']"));
+        submitButton.click();
+
+        WebElement searchPageField = driver.findElement(By.cssSelector("input[data-test='search-input']"));
+        assertEquals("Selenium", searchPageField.getAttribute("value"));
+    }
+
+    @Test
+    public void toolsMenu() {
+        new Actions(driver)
+                .moveToElement(mainPage.toolsMenu)
+                .perform();
+
+        // --- For Debug ---
+        // mainPage.toolsMenu.click();
+        // new WebDriverWait(driver, 15)
+                //.until(ExpectedConditions.elementToBeClickable(By.linkText("Find your tool")));
+
+        // Before
+        // WebElement menuPopup = driver.findElement(By.cssSelector("div[data-test='menu-main-popup-content']"));
+
+        // After
+        WebElement menuPopup = driver.findElement(By.cssSelector("div[data-test='main-menu-item']"));
+        assertTrue(menuPopup.isDisplayed());
     }
 
     @Test
